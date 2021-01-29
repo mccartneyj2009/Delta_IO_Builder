@@ -15,8 +15,10 @@ def read_csv_file():
         next(reader)
         for row in reader:
             points_list.append(row)
+        print(points_list)
         finalized_list = prepare_points_list(points_list)
-    return finalized_list
+
+    return points_list
 
 
 def determine_point_type(point):
@@ -36,13 +38,24 @@ def determine_point_type(point):
         print("Unrecognized point type.")
 
 def prepare_points_list(pl):
-    prepared_list =[]
+    #(DEV_ID, Object_Identifier, Object_Name, Type_Reference)
+    id = input('BACnet address: ')
+    start_list = []
     for item in pl:
         item.pop()
-        prepared_list.append(item)
-    for i in prepared_list:
+        start_list.append(item)
+    for i in start_list:
+        object_name = i[2]
         object_identifier = i[0] + i[1]
         type = determine_point_type(object_identifier)
+        if type == 'AI':
+            type_reference = 'AIC' + i[3]
+        elif type == 'AO':
+            type_reference = 'AOC' + i[3]
+        elif type == 'BI' or type == 'BO':
+            type_reference = 'BDC' + i[3]
+        inter_list = [id,object_identifier,object_name,type_reference]
+
 
     #return prepared_list
 
