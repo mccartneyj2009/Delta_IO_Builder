@@ -12,9 +12,11 @@ def read_csv_file():
         reader = csv.reader(csvfile)
         points_list = []
         next(reader)
+        next(reader)
         for row in reader:
             points_list.append(row)
-    return points_list
+        finalized_list = prepare_points_list(points_list)
+    return finalized_list
 
 
 def determine_point_type(point):
@@ -32,3 +34,18 @@ def determine_point_type(point):
         return 'BV'
     else:
         print("Unrecognized point type.")
+
+def prepare_points_list(pl):
+    prepared_list =[]
+    for item in pl:
+        item.pop()
+        prepared_list.append(item)
+    for i in prepared_list:
+        object_identifier = i[0] + i[1]
+        type = determine_point_type(object_identifier)
+
+    #return prepared_list
+
+
+
+read_csv_file()
