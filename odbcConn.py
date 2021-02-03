@@ -15,25 +15,13 @@ def verify_dsn_source():
     for key in dsns:
         data_source_list.append(key)
     if data_source_list.count("Delta ODBC 4") == 1:
-        print("Valid Source available")
-        print("Please verify that the proper 'Site' is setup in the ODBC Data Source Administrator (32-bit).")
-        print("Failure to do so could cause unwanted results.")
-        while True:
-            user_input = input("Continue? (Yes/No)")
-            if user_input.upper() == 'YES':
-                return True
-                break
-            elif user_input.upper() == 'NO':
-                sys.exit("terminating application")
-            else:
-                print("Invalid selection")
+        return True
     elif data_source_list.count("Delta ODBC 4") == 0:
-        print("No valid datasource.")
         return False
 
 
-def create_points():
-    points_list = readCSV.read_csv_file()
+def create_points(dev_id):
+    points_list = readCSV.read_csv_file(dev_id)
     sql_list = []
 
     # Loop thru points list and execute sql statements
@@ -73,24 +61,24 @@ def create_points():
             print(f"failed to create {sql_list[1]} {sql_list[2]}")
 
 
-def view_controller_points():
-    while True:
-        try:
-            device_id = int(input("BACnet Address: "))
-            break
-        except:
-            print("Please enter a valid BACnet Address.\n")
+def view_controller_points(dev_id):
+    # while True:
+    #     try:
+    #         dev_id = int(input("BACnet Address: "))
+    #         break
+    #     except:
+    #         print("Please enter a valid BACnet Address.\n")
     pl = []
     sql_list = [
-        f"SELECT DEV_ID, Object_Identifier, Object_Name FROM OBJECT_V4_AI WHERE DEV_ID = {device_id}",
-        f"SELECT DEV_ID, Object_Identifier, Object_Name FROM OBJECT_V4_AO WHERE DEV_ID = {device_id}",
-        f"SELECT DEV_ID, Object_Identifier, Object_Name FROM OBJECT_V4_BI WHERE DEV_ID = {device_id}",
-        f"SELECT DEV_ID, Object_Identifier, Object_Name FROM OBJECT_V4_BO WHERE DEV_ID = {device_id}",
-        f"SELECT DEV_ID, Object_Identifier, Object_Name FROM OBJECT_V4_AV WHERE DEV_ID = {device_id}",
-        f"SELECT DEV_ID, Object_Identifier, Object_Name FROM OBJECT_V4_BV WHERE DEV_ID = {device_id}",
-        f"SELECT DEV_ID, Object_Identifier, Object_Name FROM OBJECT_V4_AIC WHERE DEV_ID = {device_id}",
-        f"SELECT DEV_ID, Object_Identifier, Object_Name FROM OBJECT_V4_AOC WHERE DEV_ID = {device_id}",
-        f"SELECT DEV_ID, Object_Identifier, Object_Name FROM OBJECT_V4_BDC WHERE DEV_ID = {device_id}"
+        f"SELECT DEV_ID, Object_Identifier, Object_Name FROM OBJECT_V4_AI WHERE DEV_ID = {dev_id}",
+        f"SELECT DEV_ID, Object_Identifier, Object_Name FROM OBJECT_V4_AO WHERE DEV_ID = {dev_id}",
+        f"SELECT DEV_ID, Object_Identifier, Object_Name FROM OBJECT_V4_BI WHERE DEV_ID = {dev_id}",
+        f"SELECT DEV_ID, Object_Identifier, Object_Name FROM OBJECT_V4_BO WHERE DEV_ID = {dev_id}",
+        f"SELECT DEV_ID, Object_Identifier, Object_Name FROM OBJECT_V4_AV WHERE DEV_ID = {dev_id}",
+        f"SELECT DEV_ID, Object_Identifier, Object_Name FROM OBJECT_V4_BV WHERE DEV_ID = {dev_id}",
+        f"SELECT DEV_ID, Object_Identifier, Object_Name FROM OBJECT_V4_AIC WHERE DEV_ID = {dev_id}",
+        f"SELECT DEV_ID, Object_Identifier, Object_Name FROM OBJECT_V4_AOC WHERE DEV_ID = {dev_id}",
+        f"SELECT DEV_ID, Object_Identifier, Object_Name FROM OBJECT_V4_BDC WHERE DEV_ID = {dev_id}"
         ]
 
     for i in range(len(sql_list)):
@@ -111,8 +99,4 @@ def view_controller_points():
 
 
 def delete_points():
-    pass
-
-
-def verify_points_existing():
     pass

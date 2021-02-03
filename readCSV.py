@@ -3,7 +3,7 @@ import tkinter as tk
 from tkinter import filedialog
 
 
-def read_csv_file():
+def read_csv_file(dev_id):
     root = tk.Tk()
     root.withdraw()
 
@@ -16,7 +16,7 @@ def read_csv_file():
         next(reader)
         for row in reader:
             points_list.append(row)
-        dev_id = input('BACnet address: ')
+        #dev_id = input('BACnet address: ')
         for i in points_list:
             finalized_list.append(prepare_points_list(i,dev_id))
     return finalized_list
