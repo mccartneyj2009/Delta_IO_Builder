@@ -2,6 +2,7 @@ import pyodbc
 import sys
 import readCSV
 import os
+import tkinter as tk
 
 
 def open_driver():
@@ -20,7 +21,7 @@ def verify_dsn_source():
         return False
 
 
-def create_points(dev_id):
+def create_points(dev_id,master):
     points_list = readCSV.read_csv_file(dev_id)
     sql_list = []
 
@@ -37,7 +38,8 @@ def create_points(dev_id):
                 cursor.execute(sql)
                 cursor.close()
                 conn.close()
-                print(sql_list)
+                label = tk.Label(master,text=sql_list,bg='white')
+                label.grid(column=0, sticky="w")
             elif sql_list[3] != '' and point == "AV":
                 sql = f"INSERT INTO OBJECT_V4_{point} (DEV_ID, Object_Identifier, Object_Name, Units) " \
                       f"VALUES ({sql_list[0]},'{sql_list[1]}','{sql_list[2]}','{sql_list[3]}') "
@@ -46,7 +48,8 @@ def create_points(dev_id):
                 cursor.execute(sql)
                 cursor.close()
                 conn.close()
-                print(sql_list)
+                label = tk.Label(master, text=sql_list, bg='white')
+                label.grid(column=0, sticky="w")
             else:
                 sql_list.pop()
                 sql = f"INSERT INTO OBJECT_V4_{point} (DEV_ID, Object_Identifier, Object_Name) " \
@@ -56,18 +59,14 @@ def create_points(dev_id):
                 cursor.execute(sql)
                 cursor.close()
                 conn.close()
-                print(sql_list)
+                label = tk.Label(master, text=sql_list, bg='white')
+                label.grid(column=0, sticky="w")
         except:
-            print(f"failed to create {sql_list[1]} {sql_list[2]}")
-
+            label = tk.Label(master, text=f"failed to create {sql_list[1]} ,{sql_list[2]}", bg='white')
+            label.grid(column=0, sticky="w")
+    return
 
 def view_controller_points(dev_id):
-    # while True:
-    #     try:
-    #         dev_id = int(input("BACnet Address: "))
-    #         break
-    #     except:
-    #         print("Please enter a valid BACnet Address.\n")
     pl = []
     sql_list = [
         f"SELECT DEV_ID, Object_Identifier, Object_Name FROM OBJECT_V4_AI WHERE DEV_ID = {dev_id}",
@@ -96,7 +95,7 @@ def view_controller_points(dev_id):
     else:
         for i in range(len(pl)):
             print(pl[i])
-
+    return
 
 def delete_points():
     pass
