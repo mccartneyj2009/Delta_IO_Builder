@@ -21,7 +21,7 @@ def verify_dsn_source():
         return False
 
 
-def create_points(dev_id,master):
+def create_points(dev_id, master):
     points_list = readCSV.read_csv_file(dev_id)
     sql_list = []
 
@@ -38,7 +38,7 @@ def create_points(dev_id,master):
                 cursor.execute(sql)
                 cursor.close()
                 conn.close()
-                label = tk.Label(master,text=sql_list,bg='white')
+                label = tk.Label(master, text=sql_list, bg='white')
                 label.grid(column=0, sticky="w")
             elif sql_list[3] != '' and point == "AV":
                 sql = f"INSERT INTO OBJECT_V4_{point} (DEV_ID, Object_Identifier, Object_Name, Units) " \
@@ -49,7 +49,8 @@ def create_points(dev_id,master):
                 cursor.close()
                 conn.close()
                 label = tk.Label(master, text=sql_list, bg='white')
-                label.grid(column=0, sticky="w")
+                label.place(relx=.1, rely=.1)
+                # label.grid(column=0, sticky="w")
             else:
                 sql_list.pop()
                 sql = f"INSERT INTO OBJECT_V4_{point} (DEV_ID, Object_Identifier, Object_Name) " \
@@ -63,8 +64,9 @@ def create_points(dev_id,master):
                 label.grid(column=0, sticky="w")
         except:
             label = tk.Label(master, text=f"failed to create {sql_list[1]} ,{sql_list[2]}", bg='white')
-            label.grid(column=0, sticky="w")
+            label.pack()
     return
+
 
 def view_controller_points(dev_id):
     pl = []

@@ -8,17 +8,17 @@ def read_csv_file(dev_id):
     root.withdraw()
 
     file_path = filedialog.askopenfilename()
-    with open(file_path, newline='') as csvfile:
-        reader = csv.reader(csvfile)
+    with open(file_path, newline='') as csv_file:
+        reader = csv.reader(csv_file)
         points_list = []
         finalized_list = []
         next(reader)
         next(reader)
         for row in reader:
             points_list.append(row)
-        #dev_id = input('BACnet address: ')
+        # dev_id = input('BACnet address: ')
         for i in points_list:
-            finalized_list.append(prepare_points_list(i,dev_id))
+            finalized_list.append(prepare_points_list(i, dev_id))
     return finalized_list
 
 
@@ -38,9 +38,10 @@ def determine_point_type(point):
     else:
         print("Unrecognized point type.")
 
+
 def prepare_points_list(pl,device_id):
-    #(DEV_ID, Object_Identifier, Object_Name, Type_Reference)
-    test_list =  []
+    # (DEV_ID, Object_Identifier, Object_Name, Type_Reference)
+    test_list = []
     start_list = []
     pl.pop()
     start_list.append(pl)
@@ -54,6 +55,6 @@ def prepare_points_list(pl,device_id):
             type_reference = 'AOC' + i[3]
         elif type == 'BI' or type == 'BO':
             type_reference = 'BDC' + i[3]
-        inter_list = [device_id,object_identifier,object_name,type_reference]
+        inter_list = [device_id, object_identifier, object_name, type_reference]
         test_list.append(inter_list)
     return inter_list
