@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import *
 from tkinter import simpledialog
 from tkinter import messagebox
 import odbcConn as delta
@@ -13,7 +14,21 @@ class MainApplication(tk.Frame):
     def initialUI(self):
         # frames
         console_window = tk.Canvas(root,bg='white')
-        console_window.pack(fill="both", expand="yes", padx=5)
+        console_window.pack(fill=BOTH,expand=TRUE, padx=5)
+        # self.item_canvas = tk.Canvas(root, width=500, height=500, xscrollcommand=self.xbar.set,
+        #                              yscrollcommand=self.ybar.set)
+        # self.item_canvas.pack(side=LEFT, expand=FALSE, fill=None)
+        # self.item_canvas.configure(background='black')
+        #
+        # self.xbar = tk.Scrollbar(self.item_canvas, orient=HORIZONTAL)
+        # self.xbar.pack(side=BOTTOM, fill=X)
+        #
+        # self.ybar = tk.Scrollbar(self.item_canvas)
+        # self.ybar.pack(side=RIGHT, fill=Y)
+        #
+        #
+        #
+
         button_frame1 = tk.Frame()
         button_frame1.pack(side="left", pady=10)
         button_frame2 = tk.Frame()
