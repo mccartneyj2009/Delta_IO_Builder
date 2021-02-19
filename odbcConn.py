@@ -49,8 +49,7 @@ def create_points(dev_id, master):
                 cursor.close()
                 conn.close()
                 label = tk.Label(master, text=sql_list, bg='white')
-                label.place(relx=.1, rely=.1)
-                # label.grid(column=0, sticky="w")
+                label.grid(column=0, sticky="w")
             else:
                 sql_list.pop()
                 sql = f"INSERT INTO OBJECT_V4_{point} (DEV_ID, Object_Identifier, Object_Name) " \
@@ -64,7 +63,7 @@ def create_points(dev_id, master):
                 label.grid(column=0, sticky="w")
         except:
             label = tk.Label(master, text=f"failed to create {sql_list[1]} ,{sql_list[2]}", bg='white')
-            label.pack()
+            label.grid(column=0, sticky="w")
     return
 
 

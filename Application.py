@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import *
+from tkinter import ttk
 from tkinter import simpledialog
 from tkinter import messagebox
 import odbcConn as Delta
@@ -41,12 +42,30 @@ if __name__ == "__main__":
     root = tk.Tk()
     root.geometry('750x500')
     root.title("Database I/O Builder")
-    root.rowconfigure(0, minsize=90, weight=0)
+    root.rowconfigure(0, minsize=450, weight=0)
     root.columnconfigure(0, weight=1)
-    readout_frame = Frame(root, bg='green')
-    readout_frame.grid(row=0, column=0, sticky='nsew')
-    new_button = Button(root, text='Create Points', command=lambda: create_points_popup(readout_frame))
-    new_button.grid()
+    root.grid_propagate(False)
+    root.pack_propagate(False)
+
+    main_frame = Frame(root)
+    main_frame.pack(fill=BOTH, expand=1)
+
+    my_canvas = Canvas(main_frame)
+    my_canvas.pack(side=LEFT, fill=BOTH, expand=1)
+
+    scroll_bar = ttk.Scrollbar(main_frame, orient=VERTICAL, command=my_canvas.yview)
+    scroll_bar.pack(side=RIGHT, fill=Y)
+
+    my_canvas.configure(yscrollcommand=scroll_bar.set)
+    my_canvas.bind('<Configure>', lambda e: my_canvas.configure(scrollregion=my_canvas.bbox("all")))
+
+    working_frame = Frame(my_canvas, bg='green')
+    working_frame
+
+    my_canvas.create_window((0, 0), window=working_frame, anchor="nw")
+
+    new_button = Button(root, text='Create Points', command=lambda: create_points_popup(working_frame))
+    new_button.grid(sticky='sw', padx=10, pady=10)
 
 
     # # buttons
