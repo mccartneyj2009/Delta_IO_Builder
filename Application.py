@@ -1,9 +1,10 @@
 import tkinter as tk
+import odbcConn as Delta
+import scrollfrm
 from tkinter import *
 from tkinter import ttk
 from tkinter import simpledialog
 from tkinter import messagebox
-import odbcConn as Delta
 
 
 def create_points_popup(master_frame):
@@ -40,50 +41,30 @@ def view_points_popup():
 
 if __name__ == "__main__":
     root = tk.Tk()
-    root.geometry('750x500')
+    root.geometry('500x350')
     root.title("Database I/O Builder")
     root.rowconfigure(0, minsize=450, weight=0)
     root.columnconfigure(0, weight=1)
     root.grid_propagate(False)
     root.pack_propagate(False)
+    parent_frame = Frame(root, bg='white')
+    parent_frame.pack(fill=BOTH, expand=TRUE)
+    button_frame = Frame(root)
+    button_frame.pack(side=BOTTOM, fill=BOTH)
+    style = ttk.Style()
+    style.configure('TFrame', background='white')
 
-    main_frame = Frame(root)
-    main_frame.pack(fill=BOTH, expand=1)
+    frame = scrollfrm.ScrollableFrame(parent_frame)
 
-    my_canvas = Canvas(main_frame)
-    my_canvas.pack(side=LEFT, fill=BOTH, expand=1)
+    create_points_btn = Button(button_frame, text='Create Points', command=lambda: create_points_popup(frame.scrollable_frame))
+    create_points_btn.pack(side=LEFT, padx=10, pady=10)
+    view_controller_points_btn = tk.Button(button_frame, text="View Controller Points", command=lambda: view_points_popup())
+    view_controller_points_btn.pack(side=LEFT, padx=10, pady=10)
+    open_dsn_btn = tk.Button(button_frame, text="Open DSN Config", command=lambda: Delta.open_driver())
+    open_dsn_btn.pack(side=LEFT, padx=10, pady=10)
+    close_btn = tk.Button(button_frame, text="Close", command=lambda: root.destroy())
+    close_btn.pack(side=RIGHT, padx=10, pady=10)
 
-    scroll_bar = ttk.Scrollbar(main_frame, orient=VERTICAL, command=my_canvas.yview)
-    scroll_bar.pack(side=RIGHT, fill=Y)
-
-    my_canvas.configure(yscrollcommand=scroll_bar.set)
-    my_canvas.bind('<Configure>', lambda e: my_canvas.configure(scrollregion=my_canvas.bbox("all")))
-
-    working_frame = Frame(my_canvas, bg='green')
-    working_frame
-
-    my_canvas.create_window((0, 0), window=working_frame, anchor="nw")
-
-    new_button = Button(root, text='Create Points', command=lambda: create_points_popup(working_frame))
-    new_button.grid(sticky='sw', padx=10, pady=10)
-
-
-    # # buttons
-    # create_points_btn = tk.Button(root, text="Create Points",
-    #                               command=lambda: create_points_popup())
-    # create_points_btn.pack(side="left", padx=10)
-    #
-    # view_controller_points_btn = tk.Button(root, text="View Controller Points",
-    #                                        command=lambda: view_points_popup())
-    # view_controller_points_btn.pack(side="left", padx=10)
-    #
-    # open_dsn_btn = tk.Button(root, text="Open DSN Config",
-    #                          command=lambda: Delta.open_driver())
-    # open_dsn_btn.pack(side="left", padx=10)
-    #
-    # close_btn = tk.Button(root, text="Close",
-    #                       command=lambda: root.destroy())
-    # close_btn.pack(side="left", padx=10)
-
+    frame.pack(fill=BOTH, expand=TRUE)
 
     root.mainloop()
