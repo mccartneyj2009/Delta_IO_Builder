@@ -29,12 +29,12 @@ def create_points_popup(master_frame):
         messagebox.showerror("Invalid Source", "Please Verify ODBC driver.")
 
 
-def view_points_popup():
+def view_points_popup(master_frame):
     dev_id = simpledialog.askinteger("BACnet Address", "Enter BACnet Address")
     if dev_id is None:
         messagebox.showinfo("Stopped", "Action Stopped.")
     elif dev_id > 0:
-        Delta.view_controller_points(dev_id)
+        Delta.view_controller_points(dev_id, master_frame)
     else:
         messagebox.showerror("Invalid BACnet Address.", "The BACnet address given is not valid.")
 
@@ -58,7 +58,7 @@ if __name__ == "__main__":
 
     create_points_btn = Button(button_frame, text='Create Points', command=lambda: create_points_popup(frame.scrollable_frame))
     create_points_btn.pack(side=LEFT, padx=10, pady=10)
-    view_controller_points_btn = tk.Button(button_frame, text="View Controller Points", command=lambda: view_points_popup())
+    view_controller_points_btn = tk.Button(button_frame, text="View Controller Points", command=lambda: view_points_popup(frame.scrollable_frame))
     view_controller_points_btn.pack(side=LEFT, padx=10, pady=10)
     open_dsn_btn = tk.Button(button_frame, text="Open DSN Config", command=lambda: Delta.open_driver())
     open_dsn_btn.pack(side=LEFT, padx=10, pady=10)

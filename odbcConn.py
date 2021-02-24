@@ -6,7 +6,7 @@ import tkinter as tk
 
 
 def open_driver():
-    os.startfile('C:\Windows\SysWOW64\odbcad32.exe',)
+    os.startfile('C:\Windows\SysWOW64\odbcad32.exe')
 
 
 def verify_dsn_source():
@@ -67,7 +67,7 @@ def create_points(dev_id, master):
     return
 
 
-def view_controller_points(dev_id):
+def view_controller_points(dev_id, master):
     pl = []
     sql_list = [
         f"SELECT DEV_ID, Object_Identifier, Object_Name FROM OBJECT_V4_AI WHERE DEV_ID = {dev_id}",
@@ -91,11 +91,16 @@ def view_controller_points(dev_id):
         cursor.close()
         conn.close()
 
+    # label = tk.Label(master, text=sql_list, bg='white')
+    # label.grid(column=0, sticky="w")
+
     if not pl:
-        print("Device does not exist.\n")
+        label = tk.Label(master, text=f"Device {dev_id} does not exist.\n", bg='white')
+        label.grid(column=0, sticky="w")
     else:
         for i in range(len(pl)):
-            print(pl[i])
+            label = tk.Label(master, text=pl[i], bg='white')
+            label.grid(column=0, sticky="w")
     return
 
 def delete_points():
