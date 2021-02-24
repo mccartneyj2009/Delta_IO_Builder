@@ -40,6 +40,7 @@ def view_points_popup(master_frame):
 
 
 if __name__ == "__main__":
+    # Main root
     root = tk.Tk()
     root.geometry('500x350')
     root.title("Database I/O Builder")
@@ -47,15 +48,16 @@ if __name__ == "__main__":
     root.columnconfigure(0, weight=1)
     root.grid_propagate(False)
     root.pack_propagate(False)
+    # holding frames
     parent_frame = Frame(root, bg='white')
     parent_frame.pack(fill=BOTH, expand=TRUE)
     button_frame = Frame(root)
     button_frame.pack(side=BOTTOM, fill=BOTH)
     style = ttk.Style()
     style.configure('TFrame', background='white')
-
+    # frame that the labels get added to
     frame = scrollfrm.ScrollableFrame(parent_frame)
-
+    # Buttons
     create_points_btn = Button(button_frame, text='Create Points', command=lambda: create_points_popup(frame.scrollable_frame))
     create_points_btn.pack(side=LEFT, padx=10, pady=10)
     view_controller_points_btn = tk.Button(button_frame, text="View Controller Points", command=lambda: view_points_popup(frame.scrollable_frame))
