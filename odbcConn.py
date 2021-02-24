@@ -3,6 +3,7 @@ import sys
 import readCSV
 import os
 import tkinter as tk
+from datetime import datetime
 
 
 def open_driver():
@@ -24,6 +25,10 @@ def verify_dsn_source():
 def create_points(dev_id, master):
     points_list = readCSV.read_csv_file(dev_id)
     sql_list = []
+
+    time = datetime.now().strftime("%H:%M:%S")
+    start_label = tk.Label(master, text=f"*****Points creation started. {time}*****", bg='white')
+    start_label.grid(column=0, sticky="w")
 
     # Loop thru points list and execute sql statements
     for row in range(len(points_list)):
@@ -68,6 +73,10 @@ def create_points(dev_id, master):
 
 
 def view_controller_points(dev_id, master):
+    time = datetime.now().strftime("%H:%M:%S")
+    start_label = tk.Label(master, text=f"*****Points Query {time}*****", bg='white')
+    start_label.grid(column=0, sticky="w")
+
     pl = []
     sql_list = [
         f"SELECT DEV_ID, Object_Identifier, Object_Name FROM OBJECT_V4_AI WHERE DEV_ID = {dev_id}",
@@ -90,9 +99,6 @@ def view_controller_points(dev_id, master):
 
         cursor.close()
         conn.close()
-
-    # label = tk.Label(master, text=sql_list, bg='white')
-    # label.grid(column=0, sticky="w")
 
     if not pl:
         label = tk.Label(master, text=f"Device {dev_id} does not exist.\n", bg='white')
