@@ -109,5 +109,6 @@ def view_controller_points(dev_id, master):
             label.grid(column=0, sticky="w")
     return
 
+
 def delete_points():
     pass

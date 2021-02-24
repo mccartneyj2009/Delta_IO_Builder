@@ -20,7 +20,6 @@ def create_points_popup(master_frame):
             if dev_id is not None:
                 messagebox.showinfo("BACnet Address", f"BACnet Address set to {dev_id}.")
                 Delta.create_points(dev_id, master_frame)
-
             else:
                 messagebox.showerror("Invalid BACnet Address.", "The BACnet address given is not valid.")
         else:
@@ -58,9 +57,11 @@ if __name__ == "__main__":
     # frame that the labels get added to
     frame = scrollfrm.ScrollableFrame(parent_frame)
     # Buttons
-    create_points_btn = Button(button_frame, text='Create Points', command=lambda: create_points_popup(frame.scrollable_frame))
+    create_points_btn = Button(button_frame, text='Create Points',
+                               command=lambda: create_points_popup(frame.scrollable_frame))
     create_points_btn.pack(side=LEFT, padx=10, pady=10)
-    view_controller_points_btn = tk.Button(button_frame, text="View Controller Points", command=lambda: view_points_popup(frame.scrollable_frame))
+    view_controller_points_btn = tk.Button(button_frame, text="View Controller Points",
+                                           command=lambda: view_points_popup(frame.scrollable_frame))
     view_controller_points_btn.pack(side=LEFT, padx=10, pady=10)
     open_dsn_btn = tk.Button(button_frame, text="Open DSN Config", command=lambda: Delta.open_driver())
     open_dsn_btn.pack(side=LEFT, padx=10, pady=10)
