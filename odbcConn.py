@@ -22,23 +22,28 @@ def verify_dsn_source():
         return False
 
 
+def test_of_combo_get(vari):
+    print(vari)
+
+
 def query_for_sites():
     conn = pyodbc.connect('DSN=Delta ODBC 4', autocommit=True)
     cursor = conn.cursor()
     cursor.execute('Select SITE_ID from OBJECT_V4_NET')
     start_list_sites = []
+    inter_list_sites = []
     final_list_sites = []
     for row in cursor.fetchall():
         start_list_sites.append(row)
     for i in start_list_sites:
-        if i not in final_list_sites:
-            final_list_sites.append(i)
-    for site in final_list_sites:
-        print(site[0])
+        if i not in inter_list_sites:
+            inter_list_sites.append(i)
+    for site in inter_list_sites:
+        final_list_sites.append(site[0])
 
     cursor.close()
     conn.close()
-    pass
+    return final_list_sites
 
 
 def create_points(dev_id, master):

@@ -41,21 +41,38 @@ def view_points_popup(master_frame):
 if __name__ == "__main__":
     # Main root
     root = tk.Tk()
-    root.geometry('500x350')
+    root.geometry('600x350')
     root.title("Database I/O Builder")
     root.rowconfigure(0, minsize=450, weight=0)
     root.columnconfigure(0, weight=1)
     root.grid_propagate(False)
     root.pack_propagate(False)
+
     # holding frames
     parent_frame = Frame(root, bg='white')
     parent_frame.pack(fill=BOTH, expand=TRUE)
     button_frame = Frame(root)
     button_frame.pack(side=BOTTOM, fill=BOTH)
+    drop_down_frame = Frame(parent_frame)
+    drop_down_frame.pack(side=RIGHT, fill=Y)
     style = ttk.Style()
     style.configure('TFrame', background='white')
-    # frame that the labels get added to
+
+    # Frame that the labels get added to
     frame = scrollfrm.ScrollableFrame(parent_frame)
+
+    # Drop Down Menus
+    sites_list = Delta.query_for_sites()
+    sites_menu_lbl = Label(drop_down_frame, text="Select Site:")
+    sites_menu = ttk.Combobox(drop_down_frame, values=sites_list)
+    sites_menu_lbl.grid(row=0)
+    sites_menu.grid(row=1, padx=10)
+    system_type_list = ["AHU", "Chilled Water System", "Hot Water System"]
+    system_type_lbl = Label(drop_down_frame, text="System Type:")
+    systems_menu = ttk.Combobox(drop_down_frame,values=system_type_list)
+    system_type_lbl.grid(row=3)
+    systems_menu.grid(row=4, padx=10)
+
     # Buttons
     create_points_btn = Button(button_frame, text='Create Points',
                                command=lambda: create_points_popup(frame.scrollable_frame))
@@ -63,10 +80,12 @@ if __name__ == "__main__":
     view_controller_points_btn = tk.Button(button_frame, text="View Controller Points",
                                            command=lambda: view_points_popup(frame.scrollable_frame))
     view_controller_points_btn.pack(side=LEFT, padx=10, pady=10)
-    open_dsn_btn = tk.Button(button_frame, text="Open DSN Config", command=lambda: Delta.open_driver())
+    open_dsn_btn = Button(button_frame, text="Open DSN Config", command=lambda: Delta.open_driver())
     open_dsn_btn.pack(side=LEFT, padx=10, pady=10)
-    close_btn = tk.Button(button_frame, text="Close", command=lambda: root.destroy())
+    close_btn = Button(button_frame, text="Close", command=lambda: root.destroy())
     close_btn.pack(side=RIGHT, padx=10, pady=10)
+    newbtn = Button(button_frame, text="test", command=lambda: Delta.test_of_combo_get(sites_menu.get()))
+    newbtn.pack(side=RIGHT, padx=10, pady=10)
 
     frame.pack(fill=BOTH, expand=TRUE)
 
