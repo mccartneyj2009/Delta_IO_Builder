@@ -1,4 +1,6 @@
+import odbcConn
 
+odbcConn.query_for_sites()
 
 
 

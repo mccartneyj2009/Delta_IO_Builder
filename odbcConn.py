@@ -22,6 +22,25 @@ def verify_dsn_source():
         return False
 
 
+def query_for_sites():
+    conn = pyodbc.connect('DSN=Delta ODBC 4', autocommit=True)
+    cursor = conn.cursor()
+    cursor.execute('Select SITE_ID from OBJECT_V4_NET')
+    start_list_sites = []
+    final_list_sites = []
+    for row in cursor.fetchall():
+        start_list_sites.append(row)
+    for i in start_list_sites:
+        if i not in final_list_sites:
+            final_list_sites.append(i)
+    for site in final_list_sites:
+        print(site[0])
+
+    cursor.close()
+    conn.close()
+    pass
+
+
 def create_points(dev_id, master):
     points_list = readCSV.read_csv_file(dev_id)
     sql_list = []
@@ -69,6 +88,9 @@ def create_points(dev_id, master):
         except:
             label = tk.Label(master, text=f"failed to create {sql_list[1]} ,{sql_list[2]}", bg='white')
             label.grid(column=0, sticky="w")
+
+    cursor.close()
+    conn.close()
     return
 
 
