@@ -1,6 +1,7 @@
 import pyodbc
 import readCSV
 import os
+import logging
 import tkinter as tk
 from tkinter import messagebox
 from datetime import datetime
@@ -43,6 +44,10 @@ def query_for_sites():
 
 
 def create_points(dev_id, master, site_id):
+    logging.basicConfig(filename='app.log', filemode='a', format='%(levelname)s - %(message)s')
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
+
     if site_id != '':
         points_list = readCSV.read_csv_file(dev_id)
         sql_list = []
@@ -50,6 +55,7 @@ def create_points(dev_id, master, site_id):
         time = datetime.now().strftime("%H:%M:%S")
         start_label = tk.Label(master, text=f"*****Points creation started for site {site_id}. {time}*****", bg='white')
         start_label.grid(column=0, sticky="w")
+        logger.info(f"*****Points creation started for site {site_id}. {time}*****")
 
         # Loop thru points list and execute sql statements
         for row in range(len(points_list)):
@@ -68,6 +74,7 @@ def create_points(dev_id, master, site_id):
                     conn.close()
                     label = tk.Label(master, text=sql_list, bg='white')
                     label.grid(column=0, sticky="w")
+                    logger.info(sql_list)
                 elif sql_list[3] != '' and point == "AV" and site_id != '':
                     sql = f"INSERT INTO OBJECT_V4_{point} (DEV_ID, Object_Identifier, Object_Name, Units, SITE_ID) " \
                           f"VALUES ({sql_list[0]},'{sql_list[1]}','{sql_list[2]}','{sql_list[3]}', '{site_id}) "
@@ -78,6 +85,7 @@ def create_points(dev_id, master, site_id):
                     conn.close()
                     label = tk.Label(master, text=sql_list, bg='white')
                     label.grid(column=0, sticky="w")
+                    logger.info(sql_list)
                 else:
                     sql_list.pop()
                     sql = f"INSERT INTO OBJECT_V4_{point} (DEV_ID, Object_Identifier, Object_Name, SITE_ID) " \
@@ -89,19 +97,26 @@ def create_points(dev_id, master, site_id):
                     conn.close()
                     label = tk.Label(master, text=sql_list, bg='white')
                     label.grid(column=0, sticky="w")
+                    logger.info(sql_list)
             except:
                 label = tk.Label(master, text=f"failed to create {sql_list[1]} ,{sql_list[2]}", bg='white')
                 label.grid(column=0, sticky="w")
+                logger.info(f'Failed to create {sql_list[1]} ,{sql_list[2]}')
     else:
         messagebox.showinfo("Error", "No site selected.")
     return
 
 
 def view_controller_points(dev_id, master, site_id):
+    logging.basicConfig(filename='app.log', filemode='a', format='%(levelname)s - %(message)s')
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
+
     if site_id != '':
         time = datetime.now().strftime("%H:%M:%S")
         start_label = tk.Label(master, text=f"*****Points Query for site: {site_id} {time}*****", bg='white')
         start_label.grid(column=0, sticky="w")
+        logger.info(f"*****Points Query for site: {site_id} {time}*****")
 
         pl = []
         sql_list = [
@@ -127,10 +142,12 @@ def view_controller_points(dev_id, master, site_id):
         if not pl:
             label = tk.Label(master, text=f"Device {dev_id} does not exist.\n", bg='white')
             label.grid(column=0, sticky="w")
+            logger.info(f"Device {dev_id} does not exist.")
         else:
             for i in range(len(pl)):
                 label = tk.Label(master, text=pl[i], bg='white')
                 label.grid(column=0, sticky="w")
+                logger.info(pl[i])
         cursor.close()
         conn.close()
     else:

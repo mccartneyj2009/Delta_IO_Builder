@@ -1,7 +1,9 @@
 import logging
 
-logging.basicConfig()
-logging.info("Testtesttest")
+logging.basicConfig(filename='app.log', filemode='a', format='%(levelname)s - %(message)s')
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+logger.info("This is a test")
 
 
 
