@@ -1,6 +1,7 @@
-import odbcConn
+import logging
 
-odbcConn.query_for_sites()
+logging.basicConfig()
+logging.info("Testtesttest")
 
 
 
