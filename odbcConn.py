@@ -2,6 +2,7 @@ import pyodbc
 import readCSV
 import os
 import logging
+import variablesCreation as vc
 import tkinter as tk
 from tkinter import messagebox
 from datetime import datetime
@@ -43,7 +44,7 @@ def query_for_sites():
     return final_list_sites
 
 
-def create_points(dev_id, master, site_id):
+def create_points(dev_id, master, site_id, sys_type):
     logging.basicConfig(filename='app.log', filemode='a', format='%(levelname)s - %(message)s')
     logger = logging.getLogger()
     logger.setLevel(logging.INFO)
@@ -52,7 +53,7 @@ def create_points(dev_id, master, site_id):
         points_list = readCSV.read_csv_file(dev_id)
         sql_list = []
 
-        time = datetime.now().strftime("%H:%M:%S")
+        time = datetime.now().strftime("%B %d, %Y - %H:%M:%S")
         start_label = tk.Label(master, text=f"*****Points creation started for site {site_id}. {time}*****", bg='white')
         start_label.grid(column=0, sticky="w")
         logger.info(f"*****Points creation started for site {site_id}. {time}*****")
@@ -102,6 +103,8 @@ def create_points(dev_id, master, site_id):
                 label = tk.Label(master, text=f"failed to create {sql_list[1]} ,{sql_list[2]}", bg='white')
                 label.grid(column=0, sticky="w")
                 logger.info(f'Failed to create {sql_list[1]} ,{sql_list[2]}')
+        if sys_type == 'AHU':
+            vc.create_analog_variables(master, dev_id, site_id)
     else:
         messagebox.showinfo("Error", "No site selected.")
     return
@@ -113,7 +116,7 @@ def view_controller_points(dev_id, master, site_id):
     logger.setLevel(logging.INFO)
 
     if site_id != '':
-        time = datetime.now().strftime("%H:%M:%S")
+        time = datetime.now().strftime("%B %d, %Y - %H:%M:%S")
         start_label = tk.Label(master, text=f"*****Points Query for site: {site_id} {time}*****", bg='white')
         start_label.grid(column=0, sticky="w")
         logger.info(f"*****Points Query for site: {site_id} {time}*****")

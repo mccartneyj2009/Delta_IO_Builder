@@ -7,7 +7,7 @@ from tkinter import simpledialog
 from tkinter import messagebox
 
 
-def create_points_popup(master_frame, site_id):
+def create_points_popup(master_frame, site_id, sys_type):
     valid_source = Delta.verify_dsn_source()
     if valid_source:
         proceed = messagebox.askyesnocancel("Proceed", "Valid Source available.\nPlease verify that the proper "
@@ -17,7 +17,7 @@ def create_points_popup(master_frame, site_id):
             dev_id = simpledialog.askinteger("BACnet Address", "Enter BACnet Address")
             if dev_id is not None:
                 messagebox.showinfo("BACnet Address", f"BACnet Address set to {dev_id}.")
-                Delta.create_points(dev_id, master_frame, site_id)
+                Delta.create_points(dev_id, master_frame, site_id, sys_type)
             else:
                 messagebox.showerror("Invalid BACnet Address.", "The BACnet address given is not valid.")
         else:
@@ -60,12 +60,16 @@ if __name__ == "__main__":
     frame = scrollfrm.ScrollableFrame(parent_frame)
 
     # Drop Down Menus
-    sites_list = Delta.query_for_sites()
-    sites_menu_lbl = Label(drop_down_frame, text="Select Site:")
-    sites_menu = ttk.Combobox(drop_down_frame, values=sites_list)
-    sites_menu_lbl.grid(row=0)
-    sites_menu.grid(row=1, padx=10)
-    system_type_list = ["AHU", "Chilled Water System", "Hot Water System"]
+    valid_source = Delta.verify_dsn_source()
+    if valid_source:
+        sites_list = Delta.query_for_sites()
+        sites_menu_lbl = Label(drop_down_frame, text="Select Site:")
+        sites_menu = ttk.Combobox(drop_down_frame, values=sites_list)
+        sites_menu_lbl.grid(row=0)
+        sites_menu.grid(row=1, padx=10)
+    elif not valid_source:
+        messagebox.showerror("Invalid Source", "Please Verify ODBC driver.")
+    system_type_list = ["", "AHU", "Chilled Water System", "Hot Water System"]
     system_type_lbl = Label(drop_down_frame, text="System Type:")
     systems_menu = ttk.Combobox(drop_down_frame, values=system_type_list)
     system_type_lbl.grid(row=3)
@@ -73,7 +77,8 @@ if __name__ == "__main__":
 
     # Buttons
     create_points_btn = Button(button_frame, text='Create Points',
-                               command=lambda: create_points_popup(frame.scrollable_frame, sites_menu.get()))
+                               command=lambda: create_points_popup(frame.scrollable_frame, sites_menu.get(),
+                                                                   systems_menu.get()))
     create_points_btn.pack(side=LEFT, padx=10, pady=10)
 
     view_controller_points_btn = tk.Button(button_frame, text="View Controller Points",
