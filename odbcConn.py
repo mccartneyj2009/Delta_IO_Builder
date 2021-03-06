@@ -104,7 +104,8 @@ def create_points(dev_id, master, site_id, sys_type):
                 label.grid(column=0, sticky="w")
                 logger.info(f'Failed to create {sql_list[1]} ,{sql_list[2]}')
         if sys_type == 'AHU':
-            vc.create_analog_variables(master, dev_id, site_id)
+            vc.create_ahu_analog_variables(master, dev_id, site_id)
+            vc.create_ahu_binary_variables(master, dev_id, site_id)
     else:
         messagebox.showinfo("Error", "No site selected.")
     return
