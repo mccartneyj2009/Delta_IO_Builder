@@ -36,6 +36,12 @@ def view_points_popup(master_frame, site_id):
         messagebox.showerror("Invalid BACnet Address.", "The BACnet address given is not valid.")
 
 
+def destroy():
+    root.quit()
+    root.destroy()
+    sys.exit()
+
+
 if __name__ == "__main__":
     # Main root
     root = tk.Tk()
@@ -88,9 +94,11 @@ if __name__ == "__main__":
     open_dsn_btn = Button(button_frame, text="Open DSN Config", command=lambda: Delta.open_driver())
     open_dsn_btn.pack(side=LEFT, padx=10, pady=10)
 
-    close_btn = Button(button_frame, text="Close", command=lambda: root.destroy())
+    close_btn = Button(button_frame, text="Close", command=lambda: destroy())
     close_btn.pack(side=RIGHT, padx=10, pady=10)
 
     frame.pack(fill=BOTH, expand=TRUE)
+
+    root.protocol("WM_DELETE_WINDOW", destroy)
 
     root.mainloop()

@@ -122,7 +122,7 @@ def create_ahu_mics(master, dev_id, site_id):
         "'Controller Status', 'MIC22'"
     ]
     mic_state_texts = [
-        
+
     ]
 
     for row in range(len(mic_list)):
