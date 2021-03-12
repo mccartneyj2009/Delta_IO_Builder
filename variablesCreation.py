@@ -82,7 +82,16 @@ def create_ahu_binary_variables(master, dev_id, site_id):
 
     binary_variables_list = [
         "1,'AHU Enable','BDC7'",
-
+        "2, 'AHU Fan Request', 'BDC5'",
+        "3, 'Afterhours Override', 'BDC5'",
+        "11, 'Hot Water Available', 'BDC5'",
+        "21, 'Mechanical Cooling Available', 'BDC5'",
+        "31, 'Economizer Mode Enable', 'BDC5'",
+        "32, 'CO2 Demand Ventilation Mode Enable', 'BDC5'",
+        "41, 'Humidifier Enable', 'BDC5'",
+        "42, 'Dehumidification Enable', 'BDC5'",
+        "51, 'Supply Fans Operational Status', 'BDC5'",
+        "52, 'Return Fans Operational Status', 'BDC5'"
     ]
     for row in range(len(binary_variables_list)):
         try:
@@ -101,3 +110,54 @@ def create_ahu_binary_variables(master, dev_id, site_id):
             label = tk.Label(master, text=f"failed to create BV{binary_variables_list[row]}", bg='white')
             label.grid(column=0, sticky="w")
             logger.info(f"failed to create BV{binary_variables_list[row]}")
+
+
+def create_ahu_mics(master, dev_id, site_id):
+    logging.basicConfig(filename='app.log', filemode='a', format='%(levelname)s - %(message)s')
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
+
+    mic_list = [
+        "'Controller Modes', 'MIC21'",
+        "'Controller Status', 'MIC22'"
+    ]
+    mic_state_texts = [
+        
+    ]
+
+    for row in range(len(mic_list)):
+        try:
+            sql_statement = f"INSERT INTO OBJECT_V4_MIC (DEV_ID, Object_Name, Object_Identifier, SITE_ID)" \
+                            f"VALUES ({dev_id}, {mic_list[row]}, '{site_id}')"
+        except:
+            label = tk.Label(master, text=f"failed to create MIC{mic_list[row]}", bg='white')
+            label.grid(column=0, sticky="w")
+            logger.info(f"failed to create MIC{mic_list[row]}")
+
+
+def create_ahu_multistate_variables(master, dev_id, site_id):
+    logging.basicConfig(filename='app.log', filemode='a', format='%(levelname)s - %(message)s')
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
+
+    multistate_variables_list = [
+        "'AHU Mode', 'MIC21'",
+        "'AHU Status', 'MIC22'"
+    ]
+    for row in range(len(multistate_variables_list)):
+        try:
+            sql_statement = f"INSERT INTO OBJECT_V4_MV (DEV_ID, Object_Name, Type_Reference, SITE_ID) " \
+                            f"VALUES ({dev_id},{multistate_variables_list[row]},'{site_id}') "
+
+            conn = pyodbc.connect('DSN=Delta ODBC 4', autocommit=True)
+            cursor = conn.cursor()
+            cursor.execute(sql_statement)
+            cursor.close()
+            conn.close()
+            label = tk.Label(master, text=f"{dev_id}, MV{multistate_variables_list[row]}", bg='white')
+            label.grid(column=0, sticky="w")
+            logger.info(f"{dev_id}, MV{multistate_variables_list[row]}")
+        except:
+            label = tk.Label(master, text=f"failed to create MV{multistate_variables_list[row]}", bg='white')
+            label.grid(column=0, sticky="w")
+            logger.info(f"failed to create MV{multistate_variables_list[row]}")

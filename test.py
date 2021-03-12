@@ -1,15 +1,3 @@
-import logging
-
-logging.basicConfig(filename='app.log', filemode='a', format='%(levelname)s - %(message)s')
-logger = logging.getLogger()
-logger.setLevel(logging.INFO)
-logger.info("This is a test")
-
-
-
-
-
-
 # from tkinter import *
 #
 # root = Tk()
