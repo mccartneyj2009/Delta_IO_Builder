@@ -1,3 +1,4 @@
+from delta_connection import Delta_Connection
 import pyodbc
 import readCSV
 import os
@@ -25,13 +26,13 @@ def verify_dsn_source():
 
 
 def query_for_sites():
-    conn = pyodbc.connect('DSN=Delta ODBC 4', autocommit=True)
-    cursor = conn.cursor()
-    cursor.execute('Select SITE_ID from OBJECT_V4_NET')
+    connection = Delta_Connection('Select SITE_ID from OBJECT_V4_NET')
+
     start_list_sites = []
     inter_list_sites = []
     final_list_sites = []
-    for row in cursor.fetchall():
+
+    for row in connection.fetched_list:
         start_list_sites.append(row)
     for i in start_list_sites:
         if i not in inter_list_sites:
@@ -39,8 +40,8 @@ def query_for_sites():
     for site in inter_list_sites:
         final_list_sites.append(site[0])
 
-    cursor.close()
-    conn.close()
+    connection.close_conn_cursor()
+
     return final_list_sites
 
 
@@ -68,22 +69,16 @@ def create_points(dev_id, master, site_id, sys_type):
                     sql = f"INSERT INTO OBJECT_V4_{point} (DEV_ID, Object_Identifier, Object_Name, Type_Reference, " \
                           f"SITE_ID) " \
                           f"VALUES ({sql_list[0]},'{sql_list[1]}','{sql_list[2]}','{sql_list[3]}', '{site_id}') "
-                    conn = pyodbc.connect('DSN=Delta ODBC 4', autocommit=True)
-                    cursor = conn.cursor()
-                    cursor.execute(sql)
-                    cursor.close()
-                    conn.close()
+                    connection = Delta_Connection(sql)
+                    connection.close_conn_cursor()
                     label = tk.Label(master, text=sql_list, bg='white')
                     label.grid(column=0, sticky="w")
                     logger.info(sql_list)
                 elif sql_list[3] != '' and point == "AV" and site_id != '':
                     sql = f"INSERT INTO OBJECT_V4_{point} (DEV_ID, Object_Identifier, Object_Name, Units, SITE_ID) " \
                           f"VALUES ({sql_list[0]},'{sql_list[1]}','{sql_list[2]}','{sql_list[3]}', '{site_id}) "
-                    conn = pyodbc.connect('DSN=Delta ODBC 4', autocommit=True)
-                    cursor = conn.cursor()
-                    cursor.execute(sql)
-                    cursor.close()
-                    conn.close()
+                    connection = Delta_Connection(sql)
+                    connection.close_conn_cursor()
                     label = tk.Label(master, text=sql_list, bg='white')
                     label.grid(column=0, sticky="w")
                     logger.info(sql_list)
@@ -91,11 +86,8 @@ def create_points(dev_id, master, site_id, sys_type):
                     sql_list.pop()
                     sql = f"INSERT INTO OBJECT_V4_{point} (DEV_ID, Object_Identifier, Object_Name, SITE_ID) " \
                           f"VALUES ({sql_list[0]},'{sql_list[1]}','{sql_list[2]}', '{site_id}') "
-                    conn = pyodbc.connect('DSN=Delta ODBC 4', autocommit=True)
-                    cursor = conn.cursor()
-                    cursor.execute(sql)
-                    cursor.close()
-                    conn.close()
+                    connection = Delta_Connection(sql)
+                    connection.close_conn_cursor()
                     label = tk.Label(master, text=sql_list, bg='white')
                     label.grid(column=0, sticky="w")
                     logger.info(sql_list)
@@ -106,6 +98,8 @@ def create_points(dev_id, master, site_id, sys_type):
         if sys_type == 'AHU':
             vc.create_ahu_analog_variables(master, dev_id, site_id)
             vc.create_ahu_binary_variables(master, dev_id, site_id)
+            vc.create_ahu_mics(master, dev_id, site_id)
+            vc.create_ahu_multistate_variables(master, dev_id, site_id)
     else:
         messagebox.showinfo("Error", "No site selected.")
     return
@@ -137,10 +131,8 @@ def view_controller_points(dev_id, master, site_id):
             ]
 
         for i in range(len(sql_list)):
-            conn = pyodbc.connect('DSN=Delta ODBC 4', autocommit=True)
-            cursor = conn.cursor()
-            cursor.execute(sql_list[i])
-            for row in cursor.fetchall():
+            connection = Delta_Connection(sql_list[i])
+            for row in connection.fetched_list:
                 pl.append(row)
 
         if not pl:
@@ -152,8 +144,7 @@ def view_controller_points(dev_id, master, site_id):
                 label = tk.Label(master, text=pl[i], bg='white')
                 label.grid(column=0, sticky="w")
                 logger.info(pl[i])
-        cursor.close()
-        conn.close()
+        connection.close_conn_cursor()
     else:
         messagebox.showinfo("Error", "No site selected.")
     return

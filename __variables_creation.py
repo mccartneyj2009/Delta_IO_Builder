@@ -2,6 +2,30 @@ import pyodbc
 import logging
 import tkinter as tk
 
+class Variables:
+    def __init__(self, master, dev_id, site_id):
+        self.variables_list = []
+        self.master = master
+        self.dev_id = dev_id
+        self.site_id = site_id 
+    
+
+    def create_analog_variables(self):
+        pass
+
+
+    def create_binary_variable(self):
+        pass
+
+
+    def create_mics(self):
+        pass
+
+
+    def create_multistate_variables(self):
+        pass
+
+
 
 def create_ahu_analog_variables(master, dev_id, site_id):
     logging.basicConfig(filename='app.log', filemode='a', format='%(levelname)s - %(message)s')
@@ -121,18 +145,44 @@ def create_ahu_mics(master, dev_id, site_id):
         "'Controller Modes', 'MIC21'",
         "'Controller Status', 'MIC22'"
     ]
-    mic_state_texts = [
-
+    mic_state_text_list = [
+        "'MIC21', 1, 'Unoccupied', 21",
+        "'MIC21', 2, 'Occupied', 21",
+        "'MIC21', 3, 'Warmup', 21",
+        "'MIC21', 4, 'Unoccupied Override', 21",
+        "'MIC21', 5, 'Autozero', 21",
+        "'MIC21', 6, 'Unoccupied Heat_Cool', 21",
+        "'MIC21', 7, 'Unoccupied Dehumid', 21",
+        "'MIC21', 8, 'Cooldown', 21",
+        "'MIC21', 9, 'Airflow Calibration', 21"
     ]
 
     for row in range(len(mic_list)):
         try:
             sql_statement = f"INSERT INTO OBJECT_V4_MIC (DEV_ID, Object_Name, Object_Identifier, SITE_ID)" \
                             f"VALUES ({dev_id}, {mic_list[row]}, '{site_id}')"
+            conn = pyodbc.connect('DSN=Delta ODBC 4', autocommit=True)
+            cursor = conn.cursor()
+            cursor.execute(sql_statement)
+            cursor.close()
+            conn.close()
+            label = tk.Label(master, text=f"{dev_id}, MIC{mic_list[row]}", bg='white')
+            label.grid(column=0, sticky="w")
+            logger.info(f"{dev_id}, MIC{mic_list[row]}")
         except:
             label = tk.Label(master, text=f"failed to create MIC{mic_list[row]}", bg='white')
             label.grid(column=0, sticky="w")
             logger.info(f"failed to create MIC{mic_list[row]}")
+
+    for row in mic_state_text_list:
+        if row[0] == mic_list[0][1]:
+            sql_statement = f"Insert Into ARRAY_V4_MIC_STATE_TEXT (DEV_ID, IDX, State_Text, INSTANCE, SITE_ID)" \
+                            f"Values({dev_id}, {row[1]}, 'Warmup', {row[3]}, '{site_id}')"
+            conn = pyodbc.connect('DSN=Delta ODBC 4', autocommit=True)
+            cursor = conn.cursor()
+            cursor.execute(sql_statement)
+            cursor.close()
+            conn.close()
 
 
 def create_ahu_multistate_variables(master, dev_id, site_id):
