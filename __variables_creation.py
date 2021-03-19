@@ -8,23 +8,18 @@ class Variables:
         self.master = master
         self.dev_id = dev_id
         self.site_id = site_id 
-    
 
     def create_analog_variables(self):
         pass
 
-
     def create_binary_variable(self):
         pass
-
 
     def create_mics(self):
         pass
 
-
     def create_multistate_variables(self):
         pass
-
 
 
 def create_ahu_analog_variables(master, dev_id, site_id):

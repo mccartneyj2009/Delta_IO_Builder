@@ -1,9 +1,9 @@
 from delta_connection import Delta_Connection
-import pyodbc
+from ahu_variables import Ahu_Variables
 import readCSV
+import pyodbc
 import os
 import logging
-import variablesCreation as vc
 import tkinter as tk
 from tkinter import messagebox
 from datetime import datetime
@@ -96,10 +96,11 @@ def create_points(dev_id, master, site_id, sys_type):
                 label.grid(column=0, sticky="w")
                 logger.info(f'Failed to create {sql_list[1]} ,{sql_list[2]}')
         if sys_type == 'AHU':
-            vc.create_ahu_analog_variables(master, dev_id, site_id)
-            vc.create_ahu_binary_variables(master, dev_id, site_id)
-            vc.create_ahu_mics(master, dev_id, site_id)
-            vc.create_ahu_multistate_variables(master, dev_id, site_id)
+            variables = Ahu_Variables(master, dev_id, site_id)
+            variables.create_analog_variables()
+            variables.create_binary_variable()
+            variables.create_mics()
+            variables.create_multistate_variables()
     else:
         messagebox.showinfo("Error", "No site selected.")
     return
